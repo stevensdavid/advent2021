@@ -4,9 +4,9 @@ use std::io::BufRead;
 
 #[derive(Debug)]
 enum Direction {
-    FORWARD,
-    UP,
-    DOWN
+    Forward,
+    Up,
+    Down
 }
 
 #[derive(Debug)]
@@ -19,15 +19,15 @@ impl FromStr for Command {
     type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut split = s.split(" ");
+        let mut split = s.split(' ');
         let direction = match split.next().unwrap() {
-            "forward" => Direction::FORWARD,
-            "up" => Direction::UP,
-            "down" => Direction::DOWN,
+            "forward" => Direction::Forward,
+            "up" => Direction::Up,
+            "down" => Direction::Down,
             _ => return Err(())
         };
         let distance: i32 = split.next().unwrap().parse().unwrap();
-        Ok(Command { direction: direction, distance: distance })
+        Ok(Command { direction, distance })
     }
 }
 
@@ -43,9 +43,9 @@ fn part_one() {
     let mut position = (0,0);
     for command in commands {
         match command {
-            Command {direction: Direction::FORWARD, distance} => position.0 += distance,
-            Command {direction: Direction::UP, distance} => position.1 -= distance,
-            Command {direction: Direction::DOWN, distance} => position.1 += distance,
+            Command {direction: Direction::Forward, distance} => position.0 += distance,
+            Command {direction: Direction::Up, distance} => position.1 -= distance,
+            Command {direction: Direction::Down, distance} => position.1 += distance,
         }
     }
     let product = position.0 * position.1;
@@ -53,7 +53,24 @@ fn part_one() {
 }
 
 fn part_two() {
-
+    let commands = parse_input();
+    let mut position = (0, 0, 0);
+    for command in commands {
+        match command {
+            Command {direction: Direction::Forward, distance} => {
+                position.0 += distance;
+                position.1 += distance * position.2;
+            },
+            Command {direction: Direction::Up, distance} => {
+                position.2 -= distance;
+            },
+            Command {direction: Direction::Down, distance} => {
+                position.2 += distance;
+            },
+        }
+    }
+    let product = position.0 * position.1;
+    println!("Final position: ({0}, {1}) Product is: {2}", position.0, position.1, product);
 }
 
 fn main() {
