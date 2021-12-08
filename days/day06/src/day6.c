@@ -15,10 +15,7 @@ int main() {
     }
     c = getchar();
   }
-  for (size_t i = 0; i < 9; i++) {
-    printf("%ld,", state[i]);
-  }
-  printf("\n");
+
   // Simulate
   int n_days = 256;
   for (int day = 0; day < n_days; day++) {
